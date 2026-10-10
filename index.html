@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlyphCode — HTML Entity Encoder and Decoder</title>
+<meta name="description" content="GlyphCode is a free HTML entity encoder and decoder. Convert text to named, decimal or hex entities and back, pick symbols from a clickable grid, and preview the rendered result live.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#FAFAF9;color:#18181B}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+  .seg button{transition:all .15s}
+  .seg button.on{background:#F59E0B;color:#18181B;border-color:#F59E0B}
+  .sym{transition:all .12s}
+  .sym:hover{border-color:#F59E0B;background:#FFFBEB;transform:translateY(-1px)}
+  textarea:focus,select:focus{outline:none;border-color:#F59E0B;box-shadow:0 0 0 3px rgba(245,158,11,.25)}
+  details summary::-webkit-details-marker{display:none}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"What is an HTML entity?","acceptedAnswer":{"@type":"Answer","text":"An HTML entity is a short code that represents a character inside HTML markup. It starts with an ampersand and ends with a semicolon, such as &amp; for the ampersand sign or &copy; for the copyright symbol. Entities let you display reserved characters and symbols that are hard to type or unsafe to write directly in markup."}},
+    {"@type":"Question","name":"What is the difference between named, decimal and hex entities?","acceptedAnswer":{"@type":"Answer","text":"All three forms represent the same character. A named entity uses a memorable word, like &euro;. A decimal entity uses the character's Unicode code point in base 10, like &#8364;. A hex entity uses base 16 with an x prefix, like &#x20AC;. Browsers render all three identically; named entities are the most readable, while numeric entities cover every character, even ones without a name."}},
+    {"@type":"Question","name":"Which characters must always be encoded in HTML?","acceptedAnswer":{"@type":"Answer","text":"Five characters should always be encoded when they appear as text rather than markup: the ampersand (&amp;), less-than sign (&lt;), greater-than sign (&gt;), double quote (&quot;) inside attribute values, and the apostrophe (&apos;) in some contexts. Encoding them prevents browsers from mistaking your text for tags or attribute boundaries."}},
+    {"@type":"Question","name":"How do I decode entities I copied from page source?","acceptedAnswer":{"@type":"Answer","text":"Paste the encoded text into GlyphCode, switch to Decode mode, and the plain text appears instantly. GlyphCode understands named entities like &mdash;, decimal entities like &#8212; and hex entities like &#x2014;, and it warns you about any entity names it does not recognise instead of silently dropping them."}},
+    {"@type":"Question","name":"Are HTML entities still valid in HTML5?","acceptedAnswer":{"@type":"Answer","text":"Yes. HTML5 supports the full named entity list of more than 2,200 references, plus unlimited numeric references. Modern pages are usually served as UTF-8, so most symbols can also be written directly, but entities remain the safest choice for the five reserved characters, for invisible characters like the non-breaking space, and for markup generated inside emails, feeds and templates."}},
+    {"@type":"Question","name":"Is my text uploaded or stored when I use GlyphCode?","acceptedAnswer":{"@type":"Answer","text":"No. GlyphCode runs entirely in your browser. Encoding, decoding and the live preview happen locally on your device, nothing is sent to a server, and nothing is stored after you close the tab. That makes it safe for snippets containing private or unpublished content."}}
+  ]
+}
+</script>
+</head>
+<body id="top" class="min-h-screen">
+<header class="sticky top-0 z-40 bg-zinc-950 text-zinc-100 border-b-4 border-amber-400">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 h-14 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2 font-extrabold tracking-tight text-lg">
+      <span class="mono grid place-items-center w-8 h-8 rounded bg-amber-400 text-zinc-950 text-base font-bold">&amp;#;</span>
+      Glyph<span class="text-amber-400">Code</span>
+    </a>
+    <nav class="flex items-center gap-5 text-sm font-medium">
+      <a href="#top" class="text-zinc-300 hover:text-amber-400">Home</a>
+      <a href="https://fixoraa.tech" class="text-zinc-300 hover:text-amber-400">More Tools</a>
+    </nav>
+  </div>
+</header>
+
+<main class="mx-auto max-w-6xl px-4 sm:px-6">
+  <section class="pt-8 pb-2 text-center">
+    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">HTML Entity <span class="text-amber-500">Encoder</span> &amp; Decoder</h1>
+    <p class="mt-2 text-zinc-600 max-w-2xl mx-auto text-sm sm:text-base">Convert text to named, decimal or hex entities — and back again. Pick symbols from the grid, watch the rendered preview update live.</p>
+    <span class="inline-block mt-3 text-xs font-bold uppercase tracking-widest bg-amber-400 text-zinc-950 px-3 py-1 rounded-full">Unlimited Free Usage</span>
+  </section>
+
+  <!-- TOP AD -->
+  <div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- TOOL -->
+  <section class="mt-4 bg-white border border-zinc-200 rounded-2xl shadow-sm overflow-hidden">
+    <div class="flex flex-wrap items-center gap-3 px-4 sm:px-5 py-3 bg-zinc-950 text-zinc-100">
+      <div class="seg mono inline-flex rounded-lg overflow-hidden border border-zinc-700 text-sm" role="tablist" aria-label="Mode">
+        <button id="tabEncode" class="on px-4 py-1.5 font-semibold border border-transparent" type="button">Encode →</button>
+        <button id="tabDecode" class="px-4 py-1.5 font-semibold border border-transparent text-zinc-300" type="button">← Decode</button>
+      </div>
+      <div id="encodeOpts" class="flex flex-wrap items-center gap-3 ml-auto">
+        <div class="seg mono inline-flex rounded-lg overflow-hidden border border-zinc-700 text-xs" aria-label="Entity format">
+          <button data-fmt="named" class="fmtBtn on px-3 py-1.5 border border-transparent" type="button">&amp;name;</button>
+          <button data-fmt="decimal" class="fmtBtn px-3 py-1.5 border border-transparent text-zinc-300" type="button">&amp;#123;</button>
+          <button data-fmt="hex" class="fmtBtn px-3 py-1.5 border border-transparent text-zinc-300" type="button">&amp;#x7B;</button>
+        </div>
+        <label class="text-xs text-zinc-400 flex items-center gap-2">Scope
+          <select id="scopeSel" class="bg-zinc-900 border border-zinc-700 rounded-md text-zinc-100 text-xs px-2 py-1.5">
+            <option value="special">Special chars only (&amp; &lt; &gt; &quot; &apos;)</option>
+            <option value="nonascii">Special + non-ASCII</option>
+            <option value="all">Every character</option>
+          </select>
+        </label>
+      </div>
+      <p id="decodeHint" class="hidden ml-auto text-xs text-zinc-400">Decodes named, decimal &amp; hex entities automatically.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-zinc-200">
+      <div class="p-4 sm:p-5">
+        <label for="input" class="text-xs font-bold uppercase tracking-widest text-zinc-500">Input</label>
+        <textarea id="input" rows="8" spellcheck="false" placeholder="Type or paste text here… try: Café © 2026 — 5 &lt; 6 &amp; 7 &gt; 2" class="mono mt-2 w-full border border-zinc-300 rounded-xl p-3 text-sm bg-zinc-50 resize-y"></textarea>
+        <div class="mt-2 flex flex-wrap gap-2">
+          <button id="sampleBtn" type="button" class="text-xs font-semibold border border-zinc-300 rounded-lg px-3 py-1.5 hover:border-amber-500 hover:bg-amber-50">Load sample</button>
+          <button id="clearBtn" type="button" class="text-xs font-semibold border border-zinc-300 rounded-lg px-3 py-1.5 hover:border-amber-500 hover:bg-amber-50">Clear</button>
+          <span id="inStats" class="ml-auto text-xs text-zinc-500 self-center mono">0 chars</span>
+        </div>
+      </div>
+      <div class="p-4 sm:p-5">
+        <label for="output" class="text-xs font-bold uppercase tracking-widest text-zinc-500">Output</label>
+        <textarea id="output" rows="8" readonly spellcheck="false" placeholder="Your result appears here as you type." class="mono mt-2 w-full border border-amber-300 rounded-xl p-3 text-sm bg-amber-50/60 resize-y"></textarea>
+        <div class="mt-2 flex flex-wrap gap-2 items-center">
+          <button id="copyBtn" type="button" class="text-xs font-bold bg-amber-400 text-zinc-950 rounded-lg px-3 py-1.5 hover:bg-amber-300">Copy output</button>
+          <button id="swapBtn" type="button" class="text-xs font-semibold border border-zinc-300 rounded-lg px-3 py-1.5 hover:border-amber-500 hover:bg-amber-50">Use output as input</button>
+          <span id="outStats" class="ml-auto text-xs text-zinc-500 mono">0 chars</span>
+        </div>
+        <p id="warn" class="hidden mt-2 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2"></p>
+      </div>
+    </div>
+
+    <div class="border-t border-zinc-200 px-4 sm:px-5 py-4 bg-zinc-50">
+      <div class="flex items-baseline justify-between gap-3">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-500">Live rendered preview</h2>
+        <span class="text-[11px] text-zinc-400">Exactly what a browser shows for the output above</span>
+      </div>
+      <div id="preview" class="mt-2 min-h-[3.5rem] rounded-xl border border-dashed border-zinc-300 bg-white px-4 py-3 text-base break-words whitespace-pre-wrap"><span class="text-zinc-400 text-sm">Nothing to preview yet — start typing above.</span></div>
+    </div>
+  </section>
+
+  <!-- SYMBOL PICKER -->
+  <section class="mt-6 bg-white border border-zinc-200 rounded-2xl shadow-sm p-4 sm:p-5">
+    <div class="flex flex-wrap items-baseline justify-between gap-2">
+      <h2 class="font-bold text-lg">Symbol picker</h2>
+      <p class="text-xs text-zinc-500">Click a symbol to insert it into the input. Every form is shown for copying.</p>
+    </div>
+    <div id="symGrid" class="mt-3 grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2"></div>
+    <div id="symDetail" class="hidden mt-4 rounded-xl bg-zinc-950 text-zinc-100 p-4">
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-2 mono text-sm">
+        <span id="sdChar" class="text-3xl text-amber-400"></span>
+        <span>named <button id="sdNamed" type="button" class="text-amber-300 hover:underline font-semibold"></button></span>
+        <span>decimal <button id="sdDec" type="button" class="text-amber-300 hover:underline font-semibold"></button></span>
+        <span>hex <button id="sdHex" type="button" class="text-amber-300 hover:underline font-semibold"></button></span>
+        <span id="sdUni" class="text-zinc-400"></span>
+      </div>
+      <p class="mt-1 text-[11px] text-zinc-400">Click any form to copy it.</p>
+    </div>
+  </section>
+
+  <!-- BOTTOM AD -->
+  <div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="464498"></script>
+    </div>
+  </div>
+</div>
+
+  <!-- SEO ARTICLE -->
+  <article class="mt-4 bg-white border border-zinc-200 rounded-2xl shadow-sm p-5 sm:p-8 text-zinc-700 leading-relaxed text-[15px]">
+    <h2 class="text-2xl font-extrabold text-zinc-900">HTML Entities Explained: The Complete Guide to Encoding and Decoding Special Characters</h2>
+    <p class="mt-3">Every web page you have ever opened is built from characters, and some of those characters are troublemakers. The less-than sign starts a tag. The ampersand starts a reference. The quotation mark ends an attribute value. When the text you actually want to display contains one of these characters, the browser cannot guess whether you meant the symbol or the syntax — so HTML gives you a safe way to write it: the character reference, better known as the HTML entity. GlyphCode exists to make working with those references effortless. Paste in plain text and get clean, standards-compliant entities in named, decimal or hexadecimal form. Paste in encoded markup and get your readable text back. No uploads, no waiting, no guesswork.</p>
+
+    <h3 class="mt-6 font-bold text-zinc-900 text-lg">What exactly is an HTML entity?</h3>
+    <p class="mt-2">An HTML entity is a short sequence that begins with an ampersand (&amp;) and ends with a semicolon, and stands in for a single character. The most famous example is <span class="mono">&amp;lt;</span>, which displays as the less-than sign. When a browser parses a document and meets <span class="mono">&amp;lt;</span>, it knows the author wanted the symbol itself, not the start of a tag, and renders it as text. Entities solve three separate problems at once. First, they disambiguate reserved characters that have a structural meaning in HTML. Second, they represent characters that are difficult or impossible to type on an ordinary keyboard, such as the em dash, the euro sign or the infinity symbol. Third, they represent invisible or easily confused characters — the non-breaking space being the classic example — so that the intent of the author survives copy-pasting, minification and editors that would otherwise normalise the whitespace away.</p>
+
+    <h3 class="mt-6 font-bold text-zinc-900 text-lg">Named, decimal and hex: three spellings for the same character</h3>
+    <p class="mt-2">HTML offers three ways to write a reference, and GlyphCode converts between all of them. A <strong>named entity</strong> uses a human-readable word defined by the HTML specification: <span class="mono">&amp;copy;</span> for ©, <span class="mono">&amp;mdash;</span> for —, <span class="mono">&amp;hellip;</span> for …. Named entities are the easiest to read in source code and the easiest to remember, but they only exist for a defined list of characters. A <strong>decimal entity</strong> uses the character's Unicode code point written in base ten: © is <span class="mono">&amp;#169;</span>. A <strong>hexadecimal entity</strong> writes the same number in base sixteen, prefixed with an x: <span class="mono">&amp;#xA9;</span>. Numeric references work for absolutely every character in Unicode — including emoji and rare scripts that never received a name — which is why GlyphCode falls back to decimal form whenever you encode a character that has no name. All three spellings render identically in every browser, so the choice is purely about readability and tooling: named for hand-written content, numeric for generated output.</p>
+
+    <h3 class="mt-6 font-bold text-zinc-900 text-lg">The five characters you must never leave raw</h3>
+    <p class="mt-2">Most characters can be pasted into an HTML document as-is, especially now that UTF-8 encoding is universal. Five characters, however, should always be encoded when they are meant as text. The ampersand begins every reference, so a raw ampersand in a URL or a sentence like "Fish &amp; Chips" can accidentally form a broken entity. The less-than and greater-than signs delimit tags; a raw less-than sign in an expression such as "5 &lt; 6" may swallow the rest of the sentence as a bogus tag in lenient parsers. The double quotation mark terminates attribute values, so a quote inside an attribute must become <span class="mono">&amp;quot;</span>. The apostrophe plays the same role for single-quoted attributes and is written <span class="mono">&amp;apos;</span> in XML and XHTML contexts. GlyphCode's default scope — "Special chars only" — encodes exactly these five and leaves everything else untouched, which makes it perfect for sanitising a snippet before dropping it into a template.</p>
+
+    <h3 class="mt-6 font-bold text-zinc-900 text-lg">When should you encode more than the basics?</h3>
+    <p class="mt-2">The "Special + non-ASCII" scope goes further and converts every character outside the plain ASCII range into a reference. That is the right choice when your output travels through systems with unreliable encoding: plain-text email pipelines, legacy content management systems, RSS and Atom feeds assembled by string concatenation, PDF generators with limited font support, or databases whose charset you do not control. Encoded output is pure ASCII, so it survives any transport without mojibake — those garbled sequences like Ã© that appear when UTF-8 text is read as Latin-1. The "Every character" scope is the extreme option: it encodes letters and digits too, producing output that is useful for obfuscation demos, for embedding text inside layers of nested markup, and for testing how parsers handle fully escaped documents. It is rarely needed in production, but developers reach for it surprisingly often when debugging escaping bugs in template engines.</p>
+
+    <h3 class="mt-6 font-bold text-zinc-900 text-lg">Decoding: recovering readable text from escaped markup</h3>
+    <p class="mt-2">Decoding is the reverse journey, and it is just as common a task. You copy a headline out of a page's source and it arrives littered with <span class="mono">&amp;rsquo;</span> and <span class="mono">&amp;#8212;</span>. A data export escapes every apostrophe. An API returns double-encoded strings that display literally as "&amp;amp;" on your page. GlyphCode's decoder handles named, decimal and hexadecimal references in a single pass and reports how many entities it replaced. Just as importantly, it warns you about entity names it does not recognise: a typo like <span class="mono">&amp;coppy;</span> is left untouched and flagged, rather than being silently deleted, so you can fix the source instead of losing content. Note that decoding is deliberately one level deep — decoding twice is how double-encoding bugs are born, and if you genuinely need a second pass, the "Use output as input" button makes that an explicit, visible step.</p>
+
+    <h3 class="mt-6 font-bold text-zinc-900 text-lg">The symbol picker: a faster way to find the right reference</h3>
+    <p class="mt-2">Half the battle with entities is remembering that the character you want exists at all. The clickable symbol grid above gathers the forty symbols developers and writers reach for most — currency signs, dashes, quotes, mathematical operators, arrows, card suits and more. Clicking a symbol inserts the character into your input, and the detail strip shows all of its forms side by side: the named entity, the decimal entity, the hex entity and the Unicode code point, each one click-to-copy. It doubles as a cheat sheet you can actually use, and because choosing a symbol in Encode mode immediately shows you its encoded form in the output pane, it is also the fastest way to answer the question "how do I write this character in HTML?" without leaving the page.</p>
+
+    <h3 class="mt-6 font-bold text-zinc-900 text-lg">Why the live rendered preview matters</h3>
+    <p class="mt-2">Encoded text is hard to proofread. A paragraph full of numeric references hides its own typos, and a misplaced semicolon can change a sentence's meaning or break its layout. The live preview panel renders your output exactly as a browser would display it, updating on every keystroke. If an entity is malformed, the preview shows the raw code instead of the glyph — a visual alarm that something is wrong before you ship it. If you encoded with the non-ASCII scope, the preview proves at a glance that your accented letters, arrows and currency signs survived the conversion. Proofreading the rendered result rather than the code is a small habit that prevents a large class of embarrassing publishing mistakes, from newsletters that greet subscribers with "&amp;nbsp;" to documentation pages that print entity codes instead of symbols.</p>
+
+    <h3 class="mt-6 font-bold text-zinc-900 text-lg">Common mistakes and how to avoid them</h3>
+    <p class="mt-2">A few entity errors appear again and again. The first is forgetting the trailing semicolon: most browsers forgive it for legacy named entities in text, but not inside attribute values, and not for numeric references — always include it. The second is double-encoding: escaping text that is already escaped, which produces visible "&amp;amp;" artefacts; decode once, check the preview, and only then encode. The third is reaching for <span class="mono">&amp;nbsp;</span> as a layout tool to add spacing — use CSS margins instead, and reserve the non-breaking space for its real job of keeping two words on the same line. The fourth is assuming entities work everywhere plain text goes: they do not decode inside <span class="mono">&lt;script&gt;</span> or <span class="mono">&lt;style&gt;</span> blocks, in plain-text emails, or in most non-HTML formats, so encode for the context you are actually publishing into. Finally, remember that entities are a display mechanism, not a security mechanism: encoding user input helps prevent markup injection, but proper output escaping must happen in your application code for every context — HTML, attributes, URLs and JavaScript each have their own rules.</p>
+
+    <h3 class="mt-6 font-bold text-zinc-900 text-lg">A short history, from HTML 2 to the HTML5 living standard</h3>
+    <p class="mt-2">Character references are as old as HTML itself. The earliest specifications defined a small set based on the Latin-1 repertoire, which is why the oldest names describe accented letters. HTML 4 expanded the list with Greek letters, mathematical symbols and geometric shapes borrowed from the SGML entity sets, bringing the total to 252. HTML5 unified everything into a single table of 2,231 named references, added the rule that every reference is defined by its Unicode code point, and — quietly revolutionary — made the named list case-sensitive in precisely documented ways. Today the living standard keeps that list stable, and every browser ships the same table, which is why a tool like GlyphCode can promise that what you encode here will render the same everywhere. Understanding entities is therefore not nostalgia: it is a permanent, load-bearing part of how the web represents text, and fluency with them pays off every time you touch markup, templates, feeds or generated content.</p>
+  </article>
+
+  <!-- FAQ -->
+  <section class="mt-6 bg-white border border-zinc-200 rounded-2xl shadow-sm p-5 sm:p-8">
+    <h2 class="text-xl font-extrabold text-zinc-900">Frequently asked questions</h2>
+    <div class="mt-4 space-y-3">
+      <details class="border border-zinc-200 rounded-xl px-4 py-3">
+        <summary class="font-semibold cursor-pointer text-zinc-900">What is an HTML entity?</summary>
+        <p class="mt-2 text-sm text-zinc-600">An HTML entity is a short code that represents a character inside HTML markup. It starts with an ampersand and ends with a semicolon, such as &amp;amp; for the ampersand sign or &amp;copy; for the copyright symbol. Entities let you display reserved characters and symbols that are hard to type or unsafe to write directly in markup.</p>
+      </details>
+      <details class="border border-zinc-200 rounded-xl px-4 py-3">
+        <summary class="font-semibold cursor-pointer text-zinc-900">What is the difference between named, decimal and hex entities?</summary>
+        <p class="mt-2 text-sm text-zinc-600">All three forms represent the same character. A named entity uses a memorable word, like &amp;euro;. A decimal entity uses the character's Unicode code point in base 10, like &amp;#8364;. A hex entity uses base 16 with an x prefix, like &amp;#x20AC;. Browsers render all three identically; named entities are the most readable, while numeric entities cover every character, even ones without a name.</p>
+      </details>
+      <details class="border border-zinc-200 rounded-xl px-4 py-3">
+        <summary class="font-semibold cursor-pointer text-zinc-900">Which characters must always be encoded in HTML?</summary>
+        <p class="mt-2 text-sm text-zinc-600">Five characters should always be encoded when they appear as text rather than markup: the ampersand (&amp;amp;), less-than sign (&amp;lt;), greater-than sign (&amp;gt;), double quote (&amp;quot;) inside attribute values, and the apostrophe (&amp;apos;) in some contexts. Encoding them prevents browsers from mistaking your text for tags or attribute boundaries.</p>
+      </details>
+      <details class="border border-zinc-200 rounded-xl px-4 py-3">
+        <summary class="font-semibold cursor-pointer text-zinc-900">How do I decode entities I copied from page source?</summary>
+        <p class="mt-2 text-sm text-zinc-600">Paste the encoded text into GlyphCode, switch to Decode mode, and the plain text appears instantly. GlyphCode understands named entities like &amp;mdash;, decimal entities like &amp;#8212; and hex entities like &amp;#x2014;, and it warns you about any entity names it does not recognise instead of silently dropping them.</p>
+      </details>
+      <details class="border border-zinc-200 rounded-xl px-4 py-3">
+        <summary class="font-semibold cursor-pointer text-zinc-900">Are HTML entities still valid in HTML5?</summary>
+        <p class="mt-2 text-sm text-zinc-600">Yes. HTML5 supports the full named entity list of more than 2,200 references, plus unlimited numeric references. Modern pages are usually served as UTF-8, so most symbols can also be written directly, but entities remain the safest choice for the five reserved characters, for invisible characters like the non-breaking space, and for markup generated inside emails, feeds and templates.</p>
+      </details>
+      <details class="border border-zinc-200 rounded-xl px-4 py-3">
+        <summary class="font-semibold cursor-pointer text-zinc-900">Is my text uploaded or stored when I use GlyphCode?</summary>
+        <p class="mt-2 text-sm text-zinc-600">No. GlyphCode runs entirely in your browser. Encoding, decoding and the live preview happen locally on your device, nothing is sent to a server, and nothing is stored after you close the tab. That makes it safe for snippets containing private or unpublished content.</p>
+      </details>
+    </div>
+  </section>
+
+  <footer class="py-8 text-center text-xs text-zinc-500">
+    <p>GlyphCode — HTML entity encoder &amp; decoder. Runs 100% in your browser; your text never leaves your device.</p>
+  <p class="fx-credit" style="text-align:center;font-size:12.5px;opacity:.62;margin:10px auto 2px;letter-spacing:.01em">Made by <a href="https://fixoraa.tech" target="_blank" rel="noopener" style="color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px">Fixoraa</a></p>
+</footer>
+</main>
+
+<script id="lib-glyphcode">
+// GlyphCodeLib — pure HTML entity encode/decode logic (no DOM).
+var GlyphCodeLib = (function () {
+  'use strict';
+
+  // Named entity table: name -> character. Covers the HTML core set plus the
+  // most commonly used symbols, punctuation, math and currency entities.
+  var NAMED = {
+    quot: '"', amp: '&', apos: "'", lt: '<', gt: '>',
+    nbsp: ' ', iexcl: '¡', cent: '¢', pound: '£', curren: '¤',
+    yen: '¥', brvbar: '¦', sect: '§', uml: '¨', copy: '©',
+    ordf: 'ª', laquo: '«', not: '¬', shy: '­', reg: '®',
+    macr: '¯', deg: '°', plusmn: '±', sup2: '²', sup3: '³',
+    acute: '´', micro: 'µ', para: '¶', middot: '·', cedil: '¸',
+    sup1: '¹', ordm: 'º', raquo: '»', frac14: '¼', frac12: '½',
+    frac34: '¾', iquest: '¿', Agrave: 'À', Aacute: 'Á', Acirc: 'Â',
+    Atilde: 'Ã', Auml: 'Ä', Aring: 'Å', AElig: 'Æ', Ccedil: 'Ç',
+    Egrave: 'È', Eacute: 'É', Ecirc: 'Ê', Euml: 'Ë', Igrave: 'Ì',
+    Iacute: 'Í', Icirc: 'Î', Iuml: 'Ï', ETH: 'Ð', Ntilde: 'Ñ',
+    Ograve: 'Ò', Oacute: 'Ó', Ocirc: 'Ô', Otilde: 'Õ', Ouml: 'Ö',
+    times: '×', Oslash: 'Ø', Ugrave: 'Ù', Uacute: 'Ú', Ucirc: 'Û',
+    Uuml: 'Ü', Yacute: 'Ý', THORN: 'Þ', szlig: 'ß', agrave: 'à',
+    aacute: 'á', acirc: 'â', atilde: 'ã', auml: 'ä', aring: 'å',
+    aelig: 'æ', ccedil: 'ç', egrave: 'è', eacute: 'é', ecirc: 'ê',
+    euml: 'ë', igrave: 'ì', iacute: 'í', icirc: 'î', iuml: 'ï',
+    eth: 'ð', ntilde: 'ñ', ograve: 'ò', oacute: 'ó', ocirc: 'ô',
+    otilde: 'õ', ouml: 'ö', divide: '÷', oslash: 'ø', ugrave: 'ù',
+    uacute: 'ú', ucirc: 'û', uuml: 'ü', yacute: 'ý', thorn: 'þ',
+    yuml: 'ÿ', OElig: 'Œ', oelig: 'œ', Scaron: 'Š', scaron: 'š',
+    Yuml: 'Ÿ', fnof: 'ƒ', circ: 'ˆ', tilde: '˜',
+    ensp: ' ', emsp: ' ', thinsp: ' ', zwnj: '‌', zwj: '‍',
+    lrm: '‎', rlm: '‏', ndash: '–', mdash: '—', lsquo: '‘',
+    rsquo: '’', sbquo: '‚', ldquo: '“', rdquo: '”', bdquo: '„',
+    dagger: '†', Dagger: '‡', bull: '•', hellip: '…', permil: '‰',
+    prime: '′', Prime: '″', lsaquo: '‹', rsaquo: '›', oline: '‾',
+    frasl: '⁄', euro: '€', image: 'ℑ', weierp: '℘', real: 'ℜ',
+    trade: '™', alefsym: 'ℵ', larr: '←', uarr: '↑', rarr: '→',
+    darr: '↓', harr: '↔', crarr: '↵', lArr: '⇐', uArr: '⇑',
+    rArr: '⇒', dArr: '⇓', hArr: '⇔', forall: '∀', part: '∂',
+    exist: '∃', empty: '∅', nabla: '∇', isin: '∈', notin: '∉',
+    ni: '∋', prod: '∏', sum: '∑', minus: '−', lowast: '∗',
+    radic: '√', prop: '∝', infin: '∞', ang: '∠', and: '∧',
+    or: '∨', cap: '∩', cup: '∪', int: '∫', there4: '∴',
+    sim: '∼', cong: '≅', asymp: '≈', ne: '≠', equiv: '≡',
+    le: '≤', ge: '≥', sub: '⊂', sup: '⊃', nsub: '⊄',
+    sube: '⊆', supe: '⊇', oplus: '⊕', otimes: '⊗', perp: '⊥',
+    sdot: '⋅', lceil: '⌈', rceil: '⌉', lfloor: '⌊', rfloor: '⌋',
+    lang: '〈', rang: '〉', loz: '◊', spades: '♠', clubs: '♣',
+    hearts: '♥', diams: '♦', alpha: 'α', beta: 'β', gamma: 'γ',
+    delta: 'δ', epsilon: 'ε', zeta: 'ζ', eta: 'η', theta: 'θ',
+    iota: 'ι', kappa: 'κ', lambda: 'λ', mu: 'μ', nu: 'ν',
+    xi: 'ξ', pi: 'π', rho: 'ρ', sigma: 'σ', tau: 'τ',
+    upsilon: 'υ', phi: 'φ', chi: 'χ', psi: 'ψ', omega: 'ω',
+    Alpha: 'Α', Beta: 'Β', Gamma: 'Γ', Delta: 'Δ', Epsilon: 'Ε',
+    Zeta: 'Ζ', Eta: 'Η', Theta: 'Θ', Iota: 'Ι', Kappa: 'Κ',
+    Lambda: 'Λ', Mu: 'Μ', Nu: 'Ν', Xi: 'Ξ', Pi: 'Π',
+    Rho: 'Ρ', Sigma: 'Σ', Tau: 'Τ', Upsilon: 'Υ', Phi: 'Φ',
+    Chi: 'Χ', Psi: 'Ψ', Omega: 'Ω', thetasym: 'ϑ', upsih: 'ϒ',
+    piv: 'ϖ'
+  };
+
+  // Reverse map: character -> preferred entity name.
+  var BY_CHAR = {};
+  Object.keys(NAMED).forEach(function (name) {
+    var ch = NAMED[name];
+    if (!(ch in BY_CHAR)) BY_CHAR[ch] = name;
+  });
+
+  var SPECIAL = { '&': 'amp', '<': 'lt', '>': 'gt', '"': 'quot', "'": 'apos' };
+
+  function toDecimal(cp) { return '&#' + cp + ';'; }
+  function toHex(cp) { return '&#x' + cp.toString(16).toUpperCase() + ';'; }
+  function toNamed(ch) {
+    var name = BY_CHAR[ch];
+    return name ? '&' + name + ';' : null;
+  }
+
+  // format: 'named' | 'decimal' | 'hex'
+  // scope:  'special' (only & < > " ') | 'nonascii' (special + every char
+  //         above U+007E) | 'all' (every character)
+  function encode(text, format, scope) {
+    if (typeof text !== 'string') return '';
+    format = (format === 'decimal' || format === 'hex') ? format : 'named';
+    scope = (scope === 'nonascii' || scope === 'all') ? scope : 'special';
+    var out = '';
+    // Iterate by code point so astral characters (emoji) stay intact.
+    for (var i = 0; i < text.length;) {
+      var cp = text.codePointAt(i);
+      var ch = String.fromCodePoint(cp);
+      i += ch.length;
+      var isSpecial = Object.prototype.hasOwnProperty.call(SPECIAL, ch);
+      var needs = scope === 'all' || isSpecial || (scope === 'nonascii' && cp > 0x7E);
+      if (!needs) { out += ch; continue; }
+      if (format === 'decimal') out += toDecimal(cp);
+      else if (format === 'hex') out += toHex(cp);
+      else {
+        var named = toNamed(ch);
+        out += named !== null ? named : toDecimal(cp);
+      }
+    }
+    return out;
+  }
+
+  var ENTITY_RE = /&(#x[0-9a-fA-F]+|#X[0-9a-fA-F]+|#[0-9]+|[a-zA-Z][a-zA-Z0-9]*);/g;
+
+  // Decodes named, decimal and hex entities. Unknown or malformed entities
+  // are left untouched. Returns { text, decoded, unknown } where decoded is
+  // the number of entities replaced and unknown lists unrecognised names.
+  function decodeDetailed(text) {
+    if (typeof text !== 'string') return { text: '', decoded: 0, unknown: [] };
+    var count = 0;
+    var unknown = [];
+    var out = text.replace(ENTITY_RE, function (match, body) {
+      if (body.charAt(0) === '#') {
+        var cp;
+        if (body.charAt(1) === 'x' || body.charAt(1) === 'X') {
+          cp = parseInt(body.slice(2), 16);
+        } else {
+          cp = parseInt(body.slice(1), 10);
+        }
+        if (isFinite(cp) && cp >= 0 && cp <= 0x10FFFF && !(cp >= 0xD800 && cp <= 0xDFFF)) {
+          count++;
+          return String.fromCodePoint(cp);
+        }
+        return match;
+      }
+      if (Object.prototype.hasOwnProperty.call(NAMED, body)) {
+        count++;
+        return NAMED[body];
+      }
+      if (unknown.indexOf(body) === -1) unknown.push(body);
+      return match;
+    });
+    return { text: out, decoded: count, unknown: unknown };
+  }
+
+  function decode(text) { return decodeDetailed(text).text; }
+
+  // All entity spellings for a single character.
+  function formsFor(ch) {
+    if (typeof ch !== 'string' || ch.length === 0) return null;
+    var cp = ch.codePointAt(0);
+    var single = String.fromCodePoint(cp);
+    return {
+      char: single,
+      codePoint: cp,
+      named: toNamed(single),
+      decimal: toDecimal(cp),
+      hex: toHex(cp),
+      unicode: 'U+' + cp.toString(16).toUpperCase().padStart(4, '0')
+    };
+  }
+
+  // Symbol picker data: label + character.
+  var SYMBOLS = [
+    ['Copyright', '©'], ['Registered', '®'], ['Trademark', '™'], ['Euro', '€'],
+    ['Pound', '£'], ['Yen', '¥'], ['Cent', '¢'], ['Degree', '°'],
+    ['Plus-minus', '±'], ['Section', '§'], ['Paragraph', '¶'], ['Bullet', '•'],
+    ['Ellipsis', '…'], ['Em dash', '—'], ['En dash', '–'], ['Left quote', '“'],
+    ['Right quote', '”'], ['Apostrophe', '’'], ['Laquo', '«'], ['Raquo', '»'],
+    ['Times', '×'], ['Divide', '÷'], ['Not equal', '≠'], ['Less-equal', '≤'],
+    ['Greater-equal', '≥'], ['Infinity', '∞'], ['Pi', 'π'], ['Micro', 'µ'],
+    ['Check', '✓'], ['Cross', '✗'], ['Star', '★'], ['Heart', '♥'],
+    ['Arrow right', '→'], ['Arrow left', '←'], ['Arrow up', '↑'], ['Arrow down', '↓'],
+    ['Spade', '♠'], ['Club', '♣'], ['Diamond', '♦'], ['Non-breaking space', ' ']
+  ];
+
+  return {
+    NAMED: NAMED,
+    encode: encode,
+    decode: decode,
+    decodeDetailed: decodeDetailed,
+    formsFor: formsFor,
+    SYMBOLS: SYMBOLS
+  };
+})();
+
+if (typeof module !== 'undefined' && module.exports) { module.exports = GlyphCodeLib; }
+</script>
+<script>
+(function () {
+  var L = GlyphCodeLib;
+  var mode = 'encode', format = 'named';
+  var input = document.getElementById('input');
+  var output = document.getElementById('output');
+  var preview = document.getElementById('preview');
+  var warn = document.getElementById('warn');
+  var inStats = document.getElementById('inStats');
+  var outStats = document.getElementById('outStats');
+  var scopeSel = document.getElementById('scopeSel');
+  var tabE = document.getElementById('tabEncode');
+  var tabD = document.getElementById('tabDecode');
+  var encodeOpts = document.getElementById('encodeOpts');
+  var decodeHint = document.getElementById('decodeHint');
+
+  function countLabel(n) { return n + (n === 1 ? ' char' : ' chars'); }
+
+  function run() {
+    var text = input.value;
+    inStats.textContent = countLabel(text.length);
+    warn.classList.add('hidden');
+    if (!text) {
+      output.value = '';
+      outStats.textContent = '0 chars';
+      preview.innerHTML = '<span class="text-zinc-400 text-sm">Nothing to preview yet — start typing above.</span>';
+      return;
+    }
+    if (mode === 'encode') {
+      var enc = L.encode(text, format, scopeSel.value);
+      output.value = enc;
+      outStats.textContent = countLabel(enc.length);
+      preview.innerHTML = enc.replace(/\n/g, '<br>');
+    } else {
+      var res = L.decodeDetailed(text);
+      output.value = res.text;
+      outStats.textContent = countLabel(res.text.length) + ' · ' + res.decoded + (res.decoded === 1 ? ' entity' : ' entities') + ' decoded';
+      preview.textContent = res.text;
+      if (res.unknown.length) {
+        warn.textContent = 'Unknown entit' + (res.unknown.length === 1 ? 'y' : 'ies') + ' left as-is: ' + res.unknown.map(function (u) { return '&' + u + ';'; }).join(', ');
+        warn.classList.remove('hidden');
+      }
+    }
+  }
+
+  function setMode(m) {
+    mode = m;
+    tabE.classList.toggle('on', m === 'encode');
+    tabE.classList.toggle('text-zinc-300', m !== 'encode');
+    tabD.classList.toggle('on', m === 'decode');
+    tabD.classList.toggle('text-zinc-300', m !== 'decode');
+    encodeOpts.classList.toggle('hidden', m !== 'encode');
+    decodeHint.classList.toggle('hidden', m === 'encode');
+    run();
+  }
+  tabE.addEventListener('click', function () { setMode('encode'); });
+  tabD.addEventListener('click', function () { setMode('decode'); });
+
+  document.querySelectorAll('.fmtBtn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      format = b.getAttribute('data-fmt');
+      document.querySelectorAll('.fmtBtn').forEach(function (x) {
+        var on = x === b;
+        x.classList.toggle('on', on);
+        x.classList.toggle('text-zinc-300', !on);
+      });
+      run();
+    });
+  });
+  scopeSel.addEventListener('change', run);
+  input.addEventListener('input', run);
+
+  document.getElementById('sampleBtn').addEventListener('click', function () {
+    input.value = mode === 'encode'
+      ? 'Café © 2026 — “Fish & Chips” cost €5, and 5 < 6 while π ≈ 3.14 → ✓'
+      : 'Caf&eacute; &copy; 2026 &mdash; &ldquo;Fish &amp; Chips&rdquo; cost &euro;5, and 5 &lt; 6 while &pi; &asymp; 3.14 &rarr; &#10003;';
+    run(); input.focus();
+  });
+  document.getElementById('clearBtn').addEventListener('click', function () { input.value = ''; run(); input.focus(); });
+  document.getElementById('swapBtn').addEventListener('click', function () {
+    if (!output.value) return;
+    input.value = output.value;
+    setMode(mode === 'encode' ? 'decode' : 'encode');
+  });
+  var copyBtn = document.getElementById('copyBtn');
+  copyBtn.addEventListener('click', function () {
+    if (!output.value) return;
+    function done() { copyBtn.textContent = 'Copied!'; setTimeout(function () { copyBtn.textContent = 'Copy output'; }, 1200); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(output.value).then(done, done);
+    else { output.select(); document.execCommand('copy'); done(); }
+  });
+
+  var grid = document.getElementById('symGrid');
+  var detail = document.getElementById('symDetail');
+  var sdChar = document.getElementById('sdChar'), sdNamed = document.getElementById('sdNamed'),
+      sdDec = document.getElementById('sdDec'), sdHex = document.getElementById('sdHex'), sdUni = document.getElementById('sdUni');
+  function copyText(t) { if (navigator.clipboard) navigator.clipboard.writeText(t); }
+  [sdNamed, sdDec, sdHex].forEach(function (el) {
+    el.addEventListener('click', function () { copyText(el.textContent); });
+  });
+  L.SYMBOLS.forEach(function (s) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'sym border border-zinc-200 rounded-xl py-2.5 text-xl bg-zinc-50';
+    b.textContent = s[1].charCodeAt(0) === 160 ? '␣' : s[1];
+    b.title = s[0];
+    b.setAttribute('aria-label', 'Insert ' + s[0]);
+    b.addEventListener('click', function () {
+      var f = L.formsFor(s[1]);
+      if (!f) return;
+      var start = input.selectionStart || input.value.length;
+      var end = input.selectionEnd || start;
+      input.value = input.value.slice(0, start) + f.char + input.value.slice(end);
+      sdChar.textContent = f.codePoint === 160 ? '␣' : f.char;
+      sdNamed.textContent = f.named || '(no name)';
+      sdDec.textContent = f.decimal;
+      sdHex.textContent = f.hex;
+      sdUni.textContent = f.unicode + ' · ' + s[0];
+      detail.classList.remove('hidden');
+      run(); input.focus();
+    });
+    grid.appendChild(b);
+  });
+
+  run();
+})();
+</script>
+</body>
+</html>
